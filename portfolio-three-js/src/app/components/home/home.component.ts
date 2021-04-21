@@ -64,6 +64,7 @@ export class HomeComponent implements OnInit {
             bevelSegments: 10,
         },
         background: '#61d9ff',
+        crossColor: '#ffffff',
     };
     sceneMeshIds: number[] = [];
 
@@ -526,12 +527,16 @@ export class HomeComponent implements OnInit {
 
         textFolder.close();
         const bodyElement = document.querySelector('body');
-        bodyElement.style.backgroundColor = this.guiControls.background;
+        Helper.setGradientBackground(
+            bodyElement,
+            this.guiControls.crossColor,
+            this.guiControls.background
+        );
         this.datGui
             .addColor(this.guiControls, 'background')
             .name('Background')
             .onChange((value) => {
-                bodyElement.style.background = value;
+                // bodyElement.style.backgroundColor = value;
             });
     }
 

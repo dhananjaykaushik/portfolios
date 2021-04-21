@@ -21,4 +21,5 @@ export interface IGuiControls {
         bevelSegments: number;
     };
     background: string;
+    crossColor: string;
 }
