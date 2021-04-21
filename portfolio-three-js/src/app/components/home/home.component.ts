@@ -41,6 +41,7 @@ export class HomeComponent implements OnInit {
     textMesh: Mesh = null;
     clock: Clock = null;
     subSink: SubSink = new SubSink();
+    initialCameraMovementDone = false;
 
     guiControls: IGuiControls = {
         totalElements: 350,
@@ -50,7 +51,7 @@ export class HomeComponent implements OnInit {
             z: 2.5,
         },
         wireframe: false,
-        cameraPosition: new Vector3(0, 0, 4),
+        cameraPosition: new Vector3(-150, -4, 15),
         textParameters: {
             text: Configuration.INITIAL_TEXT,
             size: 0.6,
@@ -173,13 +174,17 @@ export class HomeComponent implements OnInit {
         );
         this.subSink.add(
             fromEvent(window, 'pointermove').subscribe((e) => {
-                const event = e as PointerEvent;
-                if (!event.isPrimary) {
-                    return;
-                }
+                if (this.initialCameraMovementDone) {
+                    const event = e as PointerEvent;
+                    if (!event.isPrimary) {
+                        return;
+                    }
 
-                this.cursorOffset.x = (event.clientX - this.width / 2) * 0.002;
-                this.cursorOffset.y = (event.clientY - this.height / 2) * 0.002;
+                    this.cursorOffset.x =
+                        (event.clientX - this.width / 2) * 0.002;
+                    this.cursorOffset.y =
+                        (event.clientY - this.height / 2) * 0.002;
+                }
             })
         );
     }
@@ -310,6 +315,7 @@ export class HomeComponent implements OnInit {
         } else {
             this.textMesh = new Mesh(textGeometry, this.material);
             this.scene.add(this.textMesh);
+            this.cameraPositionInitialize();
         }
     }
 
@@ -334,7 +340,9 @@ export class HomeComponent implements OnInit {
             window.requestAnimationFrame(tick);
             // this.orbitControls.update();
             this.animateText();
-            this.animateCamera();
+            if (this.initialCameraMovementDone) {
+                this.animateCamera();
+            }
             if (this.scene) {
                 this.camera.lookAt(this.scene.position);
             }
@@ -358,7 +366,7 @@ export class HomeComponent implements OnInit {
     animateCamera() {
         gsap.to(this.camera.position, {
             x: this.cursorOffset.x * 12,
-            y: this.cursorOffset.y * 12,
+            y: -this.cursorOffset.y * 12,
             duration: 5,
             ease: 'power4',
         });
@@ -534,6 +542,18 @@ export class HomeComponent implements OnInit {
             this.datGui.hide();
         }
         this.datGui.show();
+    }
+
+    cameraPositionInitialize() {
+        gsap.to(this.camera.position, {
+            x: 0,
+            y: 0,
+            z: 4,
+            duration: 5,
+            delay: 0.1,
+            ease: 'power4',
+        });
+        this.initialCameraMovementDone = true;
     }
 
     /**
