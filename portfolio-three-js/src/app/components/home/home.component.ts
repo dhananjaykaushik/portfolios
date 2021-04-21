@@ -356,30 +356,12 @@ export class HomeComponent implements OnInit {
     }
 
     animateCamera() {
-        const elapsedTime = this.clock.getElapsedTime();
-
-        // this.camera.rotation.x = Math.sin(elapsedTime) * Math.PI * 0.1;
-        // this.camera.rotation.y = Math.cos(elapsedTime) * Math.PI * 0.05;
-        // console.log('Before', this.camera.position);
-
         gsap.to(this.camera.position, {
             x: this.cursorOffset.x * 12,
             y: this.cursorOffset.y * 12,
-            duration: 0.3,
+            duration: 5,
             ease: 'power4',
-            onComplete: () => {
-                // gsap.to(this.camera.position, {
-                //     x: this.camera.position.x + 0.1,
-                //     y: this.camera.position.y + 0.1,
-                //     duration: 0.1,
-                //     ease: 'power4',
-                // });
-            },
         });
-        // this.camera.position.x +=
-        //     (this.cursorOffset.x - this.camera.position.x) * 0.0005;
-        // this.camera.position.y +=
-        //     (-this.cursorOffset.y - this.camera.position.y) * 0.0005;
     }
 
     createDebugger() {
