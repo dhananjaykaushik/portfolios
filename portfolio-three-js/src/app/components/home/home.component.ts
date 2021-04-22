@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
     initialCameraMovementDone = false;
 
     guiControls: IGuiControls = {
-        totalElements: 350,
+        totalElements: 300,
         textElementOffset: {
             x: 1,
             y: 1,
@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
             text: Configuration.INITIAL_TEXT,
             size: 0.6,
             height: 0.5,
-            curveSegments: 10,
+            curveSegments: 5,
             bevelEnabled: true,
             bevelThickness: 0.1,
             bevelSize: 0.02,
@@ -64,7 +64,8 @@ export class HomeComponent implements OnInit {
             bevelSegments: 10,
         },
         background: '#61d9ff',
-        crossColor: '#ffffff',
+        lineColor: '#ffffff',
+        dotColor: '#00abe2',
     };
     sceneMeshIds: number[] = [];
 
@@ -371,6 +372,10 @@ export class HomeComponent implements OnInit {
             duration: 5,
             ease: 'power4',
         });
+        const elapsedTime = this.clock.getElapsedTime();
+        this.cursorOffset.x += Math.cos(elapsedTime) * 0.002;
+        this.cursorOffset.y += Math.cos(elapsedTime) * 0.002;
+        this.cursorOffset.y += Math.sin(elapsedTime) * 0.001;
     }
 
     createDebugger() {
@@ -529,14 +534,45 @@ export class HomeComponent implements OnInit {
         const bodyElement = document.querySelector('body');
         Helper.setGradientBackground(
             bodyElement,
-            this.guiControls.crossColor,
+            this.guiControls.lineColor,
+            this.guiControls.dotColor,
             this.guiControls.background
         );
-        this.datGui
+        const colorFolder = this.datGui.addFolder('Colors');
+        colorFolder
             .addColor(this.guiControls, 'background')
             .name('Background')
             .onChange((value) => {
-                // bodyElement.style.backgroundColor = value;
+                Helper.setGradientBackground(
+                    bodyElement,
+                    this.guiControls.lineColor,
+                    this.guiControls.dotColor,
+                    this.guiControls.background
+                );
+            });
+
+        colorFolder
+            .addColor(this.guiControls, 'lineColor')
+            .name('Line Color')
+            .onChange((value) => {
+                Helper.setGradientBackground(
+                    bodyElement,
+                    this.guiControls.lineColor,
+                    this.guiControls.dotColor,
+                    this.guiControls.background
+                );
+            });
+
+        colorFolder
+            .addColor(this.guiControls, 'dotColor')
+            .name('Dot COlor')
+            .onChange((value) => {
+                Helper.setGradientBackground(
+                    bodyElement,
+                    this.guiControls.lineColor,
+                    this.guiControls.dotColor,
+                    this.guiControls.background
+                );
             });
     }
 
@@ -546,16 +582,16 @@ export class HomeComponent implements OnInit {
         } else {
             this.datGui.hide();
         }
-        this.datGui.show();
+        // this.datGui.show();
     }
 
     cameraPositionInitialize() {
         gsap.to(this.camera.position, {
             x: 0,
             y: 0,
-            z: 4,
+            z: 5,
             duration: 5,
-            delay: 0.1,
+            delay: 1,
             ease: 'power4',
         });
         this.initialCameraMovementDone = true;

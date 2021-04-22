@@ -4,16 +4,20 @@ export class Helper {
     }
     static setGradientBackground(
         element: HTMLElement,
-        crossColor: string,
+        lineColor: string,
+        dotColor: string,
         background: string
     ) {
+        element.style.background = `
+            radial-gradient(${dotColor} 4px, transparent 4px),
+            radial-gradient(${dotColor} 4px, transparent 4px),
+            linear-gradient(${background} 10px, transparent 0),
+            linear-gradient(45deg, transparent 74px, transparent 75px, ${lineColor} 75px, ${lineColor} 76px, transparent 77px, transparent 109px),
+            linear-gradient(-45deg, transparent 75px, transparent 76px, ${lineColor} 76px, ${lineColor} 77px, transparent 78px, transparent 109px),
+            #fff
+         `;
         element.style.backgroundColor = background;
-        // element.style.background = `
-        //     radial-gradient(circle, transparent 20%, ${background} 20%, ${background} 80%, transparent 80%, transparent),
-        //     radial-gradient(circle, transparent 20%, ${background} 20%, ${background} 80%, transparent 80%, transparent) 25px 25px,
-        //     linear-gradient(red 2px, transparent 2px) 0 -2px,
-        //     linear-gradient(90deg, red 2px, transparent 2px) -1px 0
-        // `;
-        element.style.backgroundSize = `50px 50px, 50px 50px, 25px 25px, 25px 25px`;
+        element.style.backgroundSize = `109px 109px, 109px 109px,100% 12px, 109px 109px, 109px 109px`;
+        element.style.backgroundPosition = `54px 55px, 0px 0px, 0px 0px, 0px 0px, 0px 0px`;
     }
 }

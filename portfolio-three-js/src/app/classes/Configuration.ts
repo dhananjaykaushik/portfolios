@@ -6,4 +6,5 @@ export class Configuration {
     static NEAR = 0.1;
     static FAR = 100;
     static INITIAL_TEXT = `curious\ndeveloper\ncreative\ndesigner`;
+    // static INITIAL_TEXT = `Hi\nI'm\nDhananjay\nFull-Stack\nDeveloper`;
 }
