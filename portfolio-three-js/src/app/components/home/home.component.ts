@@ -601,11 +601,11 @@ export class HomeComponent implements OnInit {
      * Getters and Setters
      */
     get width(): number {
-        return window.innerWidth;
+        return Math.max(320, window.innerWidth);
     }
 
     get height(): number {
-        return window.innerHeight;
+        return Math.max(640, window.innerHeight);
     }
 
     get aspect(): number {
