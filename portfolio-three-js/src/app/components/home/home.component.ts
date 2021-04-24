@@ -375,7 +375,6 @@ export class HomeComponent implements OnInit {
         const elapsedTime = this.clock.getElapsedTime();
         this.cursorOffset.x += Math.cos(elapsedTime) * 0.002;
         this.cursorOffset.y += Math.cos(elapsedTime) * 0.002;
-        this.cursorOffset.y += Math.sin(elapsedTime) * 0.001;
     }
 
     createDebugger() {
