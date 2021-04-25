@@ -17,6 +17,7 @@ import {
     Mesh,
     MeshNormalMaterial,
     PerspectiveCamera,
+    Raycaster,
     Scene,
     TetrahedronBufferGeometry,
     TextBufferGeometry,
@@ -34,21 +35,23 @@ export class HomeComponent implements OnInit {
     scene: Scene;
     camera: PerspectiveCamera = null;
     renderer: WebGLRenderer = null;
+    raycaster: Raycaster = null;
     orbitControls: OrbitControls = null;
     datGui: GUI = null;
     material: MeshNormalMaterial = null;
     font: Font;
     textMesh: Mesh = null;
+    linkesTextMesh: Mesh = null;
     clock: Clock = null;
     subSink: SubSink = new SubSink();
     initialCameraMovementDone = false;
 
     guiControls: IGuiControls = {
-        totalElements: 300,
+        totalElements: this.width <= 650 ? 100 : 200,
         textElementOffset: {
             x: 1,
             y: 1,
-            z: 2.5,
+            z: 3,
         },
         wireframe: false,
         cameraPosition: new Vector3(-150, -4, 15),
@@ -61,6 +64,17 @@ export class HomeComponent implements OnInit {
             bevelThickness: 0.1,
             bevelSize: 0.02,
             bevelOffset: 0.02,
+            bevelSegments: 10,
+        },
+        linksTextParameters: {
+            text: Configuration.INITIAL_TEXT,
+            size: 0.2,
+            height: 0.3,
+            curveSegments: 5,
+            bevelEnabled: true,
+            bevelThickness: 0.08,
+            bevelSize: 0.02,
+            bevelOffset: 0,
             bevelSegments: 10,
         },
         background: '#61d9ff',
@@ -125,6 +139,9 @@ export class HomeComponent implements OnInit {
         this.scene = new Scene();
         this.scene.add(this.camera);
 
+        // Adding Raycaster
+        this.raycaster = new Raycaster();
+
         // Adding Renderer
         this.renderer = new WebGLRenderer({
             canvas: document.querySelector('.webgl') as HTMLCanvasElement,
@@ -174,6 +191,7 @@ export class HomeComponent implements OnInit {
                 this.camera.updateProjectionMatrix();
             })
         );
+
         this.subSink.add(
             fromEvent(window, 'pointermove').subscribe((e) => {
                 if (this.initialCameraMovementDone) {
@@ -182,11 +200,20 @@ export class HomeComponent implements OnInit {
                         return;
                     }
 
+                    const offsetValueX = this.width <= 650 ? 0.0045 : 0.002;
+                    const offsetValueY = 0.002;
+
                     this.cursorOffset.x =
-                        (event.clientX - this.width / 2) * 0.002;
+                        (event.clientX - this.width / 2) * offsetValueX;
                     this.cursorOffset.y =
-                        (event.clientY - this.height / 2) * 0.002;
+                        (event.clientY - this.height / 2) * offsetValueY;
                 }
+                // Commenting for performance reasons
+                // if (this.isCursorOnProjectsLink(e)) {
+                //     document.querySelector('body').style.cursor = 'pointer';
+                // } else {
+                //     document.querySelector('body').style.cursor = 'default';
+                // }
             })
         );
     }
@@ -274,7 +301,10 @@ export class HomeComponent implements OnInit {
     }
 
     createText() {
-        this.loadFont(this.generateText.bind(this));
+        this.loadFont(() => {
+            this.generateText();
+            this.generateLinks();
+        });
     }
 
     loadFont(callBack: Function) {
@@ -319,6 +349,60 @@ export class HomeComponent implements OnInit {
             this.scene.add(this.textMesh);
             this.cameraPositionInitialize();
         }
+    }
+
+    generateLinks() {
+        const projectsTextGeometry = new TextBufferGeometry('Projects', {
+            font: this.font,
+            size: this.guiControls.linksTextParameters.size,
+            height: this.guiControls.linksTextParameters.height,
+            bevelEnabled: this.guiControls.linksTextParameters.bevelEnabled,
+            bevelOffset: this.guiControls.linksTextParameters.bevelOffset,
+            bevelSegments: this.guiControls.linksTextParameters.bevelSegments,
+            bevelSize: this.guiControls.linksTextParameters.bevelSize,
+            bevelThickness: this.guiControls.linksTextParameters.bevelThickness,
+            curveSegments: this.guiControls.linksTextParameters.curveSegments,
+        });
+
+        projectsTextGeometry.center();
+        if (this.linkesTextMesh) {
+            this.linkesTextMesh.geometry = projectsTextGeometry;
+        } else {
+            this.linkesTextMesh = new Mesh(projectsTextGeometry, this.material);
+            this.linkesTextMesh.position.set(3, 2, 0);
+            this.handleProjectsLinkClick();
+            this.scene.add(this.linkesTextMesh);
+        }
+    }
+
+    handleProjectsLinkClick() {
+        fromEvent(window, 'pointerup').subscribe((e) => {
+            if (this.isCursorOnProjectsLink(e)) {
+                console.log('Show Projects');
+            }
+        });
+    }
+
+    isCursorOnProjectsLink(e: Event): boolean {
+        if (this.raycaster && this.camera) {
+            const event = e as MouseEvent;
+            const mouse = {
+                x: 0,
+                y: 0,
+            };
+            mouse.x = (event.clientX / this.width) * 2 - 1;
+            mouse.y = -(event.clientY / this.height) * 2 + 1;
+            this.raycaster.setFromCamera(mouse, this.camera);
+            const intersect = this.raycaster.intersectObject(
+                this.linkesTextMesh,
+                true
+            );
+            if (intersect.length) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     setControls() {
@@ -530,8 +614,110 @@ export class HomeComponent implements OnInit {
             });
 
         textFolder.close();
+
+        // -------------------
+
+        const linksTextFolder = this.datGui.addFolder('Links Text');
+
+        linksTextFolder
+            .add(this.guiControls.linksTextParameters, 'size')
+            .min(0.1)
+            .max(3)
+            .step(0.1)
+            .name('Size')
+            .onFinishChange((value) => {
+                if (this.linkesTextMesh) {
+                    this.generateLinks();
+                }
+            });
+
+        linksTextFolder
+            .add(this.guiControls.linksTextParameters, 'height')
+            .min(0.1)
+            .max(3)
+            .step(0.1)
+            .name('Height')
+            .onFinishChange((value) => {
+                if (this.linkesTextMesh) {
+                    this.generateLinks();
+                }
+            });
+
+        linksTextFolder
+            .add(this.guiControls.linksTextParameters, 'curveSegments')
+            .min(1)
+            .max(20)
+            .step(1)
+            .name('Curve Segments')
+            .onFinishChange((value) => {
+                if (this.linkesTextMesh) {
+                    this.generateLinks();
+                }
+            });
+
+        linksTextFolder
+            .add(this.guiControls.linksTextParameters, 'bevelEnabled')
+            .name('Bevel Ensable')
+            .onFinishChange((value) => {
+                if (this.linkesTextMesh) {
+                    this.generateLinks();
+                }
+            });
+
+        linksTextFolder
+            .add(this.guiControls.linksTextParameters, 'bevelThickness')
+            .min(0)
+            .max(0.5)
+            .step(0.01)
+            .name('Bevel Thickness')
+            .onFinishChange((value) => {
+                if (this.linkesTextMesh) {
+                    this.generateLinks();
+                }
+            });
+
+        linksTextFolder
+            .add(this.guiControls.linksTextParameters, 'bevelSize')
+            .min(0)
+            .max(0.5)
+            .step(0.01)
+            .name('Bevel Size')
+            .onFinishChange((value) => {
+                if (this.linkesTextMesh) {
+                    this.generateLinks();
+                }
+            });
+
+        linksTextFolder
+            .add(this.guiControls.linksTextParameters, 'bevelOffset')
+            .min(0)
+            .max(0.05)
+            .step(0.001)
+            .name('Bevel Offset')
+            .onFinishChange((value) => {
+                if (this.linkesTextMesh) {
+                    this.generateLinks();
+                }
+            });
+
+        linksTextFolder
+            .add(this.guiControls.linksTextParameters, 'bevelSegments')
+            .min(1)
+            .max(20)
+            .step(1)
+            .name('Bevel Segments')
+            .onFinishChange((value) => {
+                if (this.linkesTextMesh) {
+                    this.generateLinks();
+                }
+            });
+
+        linksTextFolder.close();
+
+        // -------------------
+
         const bodyElement = document.querySelector('body');
-        Helper.setGradientBackground(
+        Helper.setGradientBackgroundValues(
             bodyElement,
             this.guiControls.lineColor,
             this.guiControls.dotColor,
@@ -542,10 +728,8 @@ export class HomeComponent implements OnInit {
             .addColor(this.guiControls, 'background')
             .name('Background')
             .onChange((value) => {
-                Helper.setGradientBackground(
-                    bodyElement,
-                    this.guiControls.lineColor,
-                    this.guiControls.dotColor,
+                Helper.changeCssVariableValue(
+                    'primary',
                     this.guiControls.background
                 );
             });
@@ -554,23 +738,19 @@ export class HomeComponent implements OnInit {
             .addColor(this.guiControls, 'lineColor')
             .name('Line Color')
             .onChange((value) => {
-                Helper.setGradientBackground(
-                    bodyElement,
-                    this.guiControls.lineColor,
-                    this.guiControls.dotColor,
-                    this.guiControls.background
+                Helper.changeCssVariableValue(
+                    'home-background-pattern-line-color',
+                    this.guiControls.lineColor
                 );
             });
 
         colorFolder
             .addColor(this.guiControls, 'dotColor')
-            .name('Dot COlor')
+            .name('Dot Color')
             .onChange((value) => {
-                Helper.setGradientBackground(
-                    bodyElement,
-                    this.guiControls.lineColor,
-                    this.guiControls.dotColor,
-                    this.guiControls.background
+                Helper.changeCssVariableValue(
+                    'home-background-pattern-dot-color',
+                    this.guiControls.dotColor
                 );
             });
     }
