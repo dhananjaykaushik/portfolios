@@ -1,0 +1,31 @@
+\:host
+    height: 100%
+    width: 100%
+
+    .projects-container
+        height: 100%
+        width: 100%
+        display: flex
+
+        app-info-aside
+            flex: 1
+            max-width: fit-content
+
+        .projects
+            display: flex
+            flex-wrap: wrap
+            gap: 24px
+            padding: 72px 24px
+            overflow: auto
+            justify-content: space-around
+
+            .project
+                border-radius: 6px
+                background-color: grey
+                display: flex
+                justify-content: center
+                align-items: center
+                font-weight: bold
+                color: white
+                height: 150px
+                width: 150px

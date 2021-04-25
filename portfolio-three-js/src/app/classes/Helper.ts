@@ -3,12 +3,7 @@ export class Helper {
         return values[Math.floor(Math.random() * values.length)];
     }
 
-    static setGradientBackgroundValues(
-        element: HTMLElement,
-        lineColor: string,
-        dotColor: string,
-        background: string
-    ) {
+    static setGradientBackgroundValues(element: HTMLElement) {
         element.style.background = `
             radial-gradient(var(--home-background-pattern-dot-color) 4px, transparent 4px),
             radial-gradient(var(--home-background-pattern-dot-color) 4px, transparent 4px),

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { GUI } from 'dat.gui';
 import { gsap } from 'gsap';
 import { fromEvent } from 'rxjs';
@@ -88,7 +89,7 @@ export class HomeComponent implements OnInit {
         y: 0,
     };
 
-    constructor() {}
+    constructor(private router: Router) {}
 
     ngOnInit(): void {
         // Creating clock
@@ -379,6 +380,7 @@ export class HomeComponent implements OnInit {
         fromEvent(window, 'pointerup').subscribe((e) => {
             if (this.isCursorOnProjectsLink(e)) {
                 console.log('Show Projects');
+                this.router.navigate(['projects']);
             }
         });
     }
@@ -712,13 +714,8 @@ export class HomeComponent implements OnInit {
 
         linksTextFolder.close();
 
-        const bodyElement = document.querySelector('body');
-        Helper.setGradientBackgroundValues(
-            bodyElement,
-            this.guiControls.lineColor,
-            this.guiControls.dotColor,
-            this.guiControls.background
-        );
+        const homeComponent = document.querySelector('app-home');
+        Helper.setGradientBackgroundValues(homeComponent as HTMLElement);
         const colorFolder = this.datGui.addFolder('Colors');
         colorFolder
             .addColor(this.guiControls, 'background')
