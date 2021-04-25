@@ -1,4 +1,65 @@
-<aside>
+<span class="nav-toggle" *ngIf="(screenWidth | async) <= MENU_BREAKPOINT">
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="120"
+        height="120"
+        viewBox="0 0 120 120"
+        *ngIf="!(menuOpen | async)"
+        (click)="menuOpen.next(true)"
+    >
+        <defs>
+            <clipPath id="b"><rect width="120" height="120" /></clipPath>
+        </defs>
+        <g id="a" clip-path="url(#b)">
+            <g transform="translate(0 -41.152)">
+                <g transform="translate(0 60.152)">
+                    <path
+                        d="M3.75,67.652h112.5a3.75,3.75,0,1,0,0-7.5H3.75a3.75,3.75,0,1,0,0,7.5Z"
+                        transform="translate(0 -60.152)"
+                    />
+                    <path
+                        d="M116.25,180.455H3.75a3.75,3.75,0,1,0,0,7.5h112.5a3.75,3.75,0,1,0,0-7.5Z"
+                        transform="translate(0 -142.955)"
+                    />
+                    <path
+                        d="M116.25,300.758H3.75a3.75,3.75,0,0,0,0,7.5h112.5a3.75,3.75,0,0,0,0-7.5Z"
+                        transform="translate(0 -225.758)"
+                    />
+                </g>
+            </g>
+        </g>
+    </svg>
+
+    <svg
+        *ngIf="menuOpen | async"
+        (click)="menuOpen.next(false)"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="120"
+        height="120"
+        viewBox="0 0 120 120"
+    >
+        <defs>
+            <clipPath id="b"><rect width="120" height="120" /></clipPath>
+        </defs>
+        <g id="a" clip-path="url(#b)">
+            <g transform="translate(0 -0.001)">
+                <g transform="translate(0 0.001)">
+                    <path
+                        d="M66.629,60l52-52A4.688,4.688,0,0,0,112,1.374l-52,52-52-52A4.688,4.688,0,0,0,1.373,8l52,52-52,52A4.688,4.688,0,0,0,8,118.628l52-52,52,52a4.688,4.688,0,1,0,6.63-6.629Z"
+                        transform="translate(0 -0.001)"
+                    />
+                </g>
+            </g>
+        </g>
+    </svg>
+</span>
+
+<aside
+    *ngIf="(screenWidth | async) <= MENU_BREAKPOINT ? (menuOpen | async) : true"
+    [ngClass]="{ 'mobile-menu': (screenWidth | async) <= MENU_BREAKPOINT }"
+>
     <div class="profile-image">
         <img src="../../../assets/me.jpg" alt="Dhananjay Kaushik" />
     </div>
@@ -23,6 +84,7 @@
                 class="heading-font"
                 [routerLink]="['/projects']"
                 [routerLinkActive]="['active']"
+                (click)="menuOpen.next(false)"
             >
                 PROJECTS
             </a>

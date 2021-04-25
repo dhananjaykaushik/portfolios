@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GUI } from 'dat.gui';
 import { gsap } from 'gsap';
@@ -32,7 +32,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.sass'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
     scene: Scene;
     camera: PerspectiveCamera = null;
     renderer: WebGLRenderer = null;
@@ -782,5 +782,9 @@ export class HomeComponent implements OnInit {
 
     get aspect(): number {
         return this.width / this.height;
+    }
+
+    ngOnDestroy(): void {
+        this.subSink.unsubscribe();
     }
 }
