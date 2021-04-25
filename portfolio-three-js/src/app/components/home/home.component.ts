@@ -615,8 +615,6 @@ export class HomeComponent implements OnInit {
 
         textFolder.close();
 
-        // -------------------
-
         const linksTextFolder = this.datGui.addFolder('Links Text');
 
         linksTextFolder
@@ -713,8 +711,6 @@ export class HomeComponent implements OnInit {
             });
 
         linksTextFolder.close();
-
-        // -------------------
 
         const bodyElement = document.querySelector('body');
         Helper.setGradientBackgroundValues(
