@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { GUI } from 'dat.gui';
 import { gsap } from 'gsap';
 import { fromEvent } from 'rxjs';
@@ -89,7 +88,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         y: 0,
     };
 
-    constructor(private router: Router) {}
+    constructor() {}
 
     ngOnInit(): void {
         // Creating clock
@@ -304,7 +303,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     createText() {
         this.loadFont(() => {
             this.generateText();
-            this.generateLinks();
+            // this.generateLinks();
         });
     }
 
@@ -380,7 +379,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         fromEvent(window, 'pointerup').subscribe((e) => {
             if (this.isCursorOnProjectsLink(e)) {
                 console.log('Show Projects');
-                this.router.navigate(['projects']);
+                // this.router.navigate(['projects']);
             }
         });
     }

@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, fromEvent } from 'rxjs';
+import { Configuration } from 'src/app/classes/Configuration';
 import { SubSink } from 'subsink';
 
 @Component({
@@ -14,8 +16,9 @@ export class InfoAsideComponent implements OnInit, OnDestroy {
     );
     menuOpen: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     readonly MENU_BREAKPOINT = 800;
+    Configuration = Configuration;
 
-    constructor() {}
+    constructor(public route: ActivatedRoute) {}
 
     ngOnInit(): void {
         this.subSink = new SubSink();

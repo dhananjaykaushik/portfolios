@@ -1,59 +1,69 @@
 <span class="nav-toggle" *ngIf="(screenWidth | async) <= MENU_BREAKPOINT">
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        width="120"
-        height="120"
-        viewBox="0 0 120 120"
-        *ngIf="!(menuOpen | async)"
-        (click)="menuOpen.next(true)"
-    >
-        <defs>
-            <clipPath id="b"><rect width="120" height="120" /></clipPath>
-        </defs>
-        <g id="a" clip-path="url(#b)">
-            <g transform="translate(0 -41.152)">
-                <g transform="translate(0 60.152)">
-                    <path
-                        d="M3.75,67.652h112.5a3.75,3.75,0,1,0,0-7.5H3.75a3.75,3.75,0,1,0,0,7.5Z"
-                        transform="translate(0 -60.152)"
-                    />
-                    <path
-                        d="M116.25,180.455H3.75a3.75,3.75,0,1,0,0,7.5h112.5a3.75,3.75,0,1,0,0-7.5Z"
-                        transform="translate(0 -142.955)"
-                    />
-                    <path
-                        d="M116.25,300.758H3.75a3.75,3.75,0,0,0,0,7.5h112.5a3.75,3.75,0,0,0,0-7.5Z"
-                        transform="translate(0 -225.758)"
-                    />
+    <div class="icon">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            width="120"
+            height="120"
+            viewBox="0 0 120 120"
+            *ngIf="!(menuOpen | async)"
+            (click)="menuOpen.next(true)"
+        >
+            <defs>
+                <clipPath id="b"><rect width="120" height="120" /></clipPath>
+            </defs>
+            <g id="a" clip-path="url(#b)">
+                <g transform="translate(0 -41.152)">
+                    <g transform="translate(0 60.152)">
+                        <path
+                            d="M3.75,67.652h112.5a3.75,3.75,0,1,0,0-7.5H3.75a3.75,3.75,0,1,0,0,7.5Z"
+                            transform="translate(0 -60.152)"
+                        />
+                        <path
+                            d="M116.25,180.455H3.75a3.75,3.75,0,1,0,0,7.5h112.5a3.75,3.75,0,1,0,0-7.5Z"
+                            transform="translate(0 -142.955)"
+                        />
+                        <path
+                            d="M116.25,300.758H3.75a3.75,3.75,0,0,0,0,7.5h112.5a3.75,3.75,0,0,0,0-7.5Z"
+                            transform="translate(0 -225.758)"
+                        />
+                    </g>
                 </g>
             </g>
-        </g>
-    </svg>
+        </svg>
 
-    <svg
-        *ngIf="menuOpen | async"
-        (click)="menuOpen.next(false)"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        width="120"
-        height="120"
-        viewBox="0 0 120 120"
-    >
-        <defs>
-            <clipPath id="b"><rect width="120" height="120" /></clipPath>
-        </defs>
-        <g id="a" clip-path="url(#b)">
-            <g transform="translate(0 -0.001)">
-                <g transform="translate(0 0.001)">
-                    <path
-                        d="M66.629,60l52-52A4.688,4.688,0,0,0,112,1.374l-52,52-52-52A4.688,4.688,0,0,0,1.373,8l52,52-52,52A4.688,4.688,0,0,0,8,118.628l52-52,52,52a4.688,4.688,0,1,0,6.63-6.629Z"
-                        transform="translate(0 -0.001)"
-                    />
+        <svg
+            *ngIf="menuOpen | async"
+            (click)="menuOpen.next(false)"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            width="120"
+            height="120"
+            viewBox="0 0 120 120"
+        >
+            <defs>
+                <clipPath id="b"><rect width="120" height="120" /></clipPath>
+            </defs>
+            <g id="a" clip-path="url(#b)">
+                <g transform="translate(0 -0.001)">
+                    <g transform="translate(0 0.001)">
+                        <path
+                            d="M66.629,60l52-52A4.688,4.688,0,0,0,112,1.374l-52,52-52-52A4.688,4.688,0,0,0,1.373,8l52,52-52,52A4.688,4.688,0,0,0,8,118.628l52-52,52,52a4.688,4.688,0,1,0,6.63-6.629Z"
+                            transform="translate(0 -0.001)"
+                        />
+                    </g>
                 </g>
             </g>
-        </g>
-    </svg>
+        </svg>
+    </div>
+    <div class="heading" *ngIf="!(menuOpen | async)">
+        <span
+            class="heading-font"
+            *ngIf="(route.url | async)[0].path.includes('projects')"
+        >
+            PROJECTS
+        </span>
+    </div>
 </span>
 
 <aside
@@ -63,6 +73,7 @@
     <div class="profile-image">
         <img src="../../../assets/me.jpg" alt="Dhananjay Kaushik" />
     </div>
+    <div class="author-name heading-font">DHANANJAY KAUSHIk</div>
     <div class="mini-info">
         Armed with web-development skills and a never-ending thirst for
         knowledge, I develop and learn things.
@@ -95,7 +106,7 @@
     <div class="socials">
         <a
             target="_blank"
-            href="https://www.linkedin.com/in/dhananjaykaushik96/"
+            [href]="Configuration.LINKEDIN_PROFILE_URL"
             class="social linkedin"
         >
             <svg
@@ -125,7 +136,7 @@
         </a>
         <a
             target="_blank"
-            href="https://www.instagram.com/iamdhananjaykaushik/"
+            [href]="Configuration.INSTAGRAM_PROFILE_URL"
             class="social instagram"
         >
             <svg
@@ -190,7 +201,7 @@
         </a>
         <a
             target="_blank"
-            href="https://www.facebook.com/dhananjaycool.dj"
+            [href]="Configuration.FACEBOOK_PROFILE_URL"
             class="social facebook"
         >
             <svg

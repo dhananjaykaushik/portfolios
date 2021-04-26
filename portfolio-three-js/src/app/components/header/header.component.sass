@@ -15,6 +15,7 @@
         width: 100%
         justify-content: center
         align-items: center
+        position: relative
 
         .author
             margin: 0 auto
@@ -31,7 +32,73 @@
                 &:hover
                     color: var(--primary-dark)
 
-@media screen and (max-width: 400px)
+        .links
+            position: absolute
+            right: 24px
+            width: fit-content
+            display: flex
+
+            .link
+                display: flex
+                align-items: center
+                cursor: pointer
+
+                .icon
+                    height: 24px
+                    width: 24px
+                    position: relative
+                    right: 4px
+                    transition: all 0.3s ease-in-out
+
+                    svg
+                        max-height: 100%
+                        max-width: 100%
+                        fill: var(--primary-dark)
+
+                .text
+                    font-size: 12px
+                    font-weight: 800
+                    text-transform: uppercase
+                    letter-spacing: 2px
+                    color: var(--primary-dark)
+
+                &:hover
+                    .icon
+                        right: calc(-100% - 4px)
+
+                        svg
+                            fill: #222222
+
+                    .text
+                        color: #222222
+                        border-bottom: 1px solid #222222
+
+@media screen and (max-width: 800px)
+    header
+        justify-content: flex-start !important
+
+        .author
+            margin: unset !important
+
+@media screen and (max-width: 500px)
     .author
         a
             font-size: 14px !important
+
+    .links
+        .link
+            .icon
+                height: 18px !important
+                width: 18px !important
+
+            .text
+                font-size: 12px !important
+
+@media screen and (max-width: 400px)
+    header
+        flex-direction: column
+        padding-top: 12px
+
+        .links
+            position: static !important
+            margin-top: 12px !important
